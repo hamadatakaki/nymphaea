@@ -9,14 +9,14 @@ pub fn create_file(path: &Path, body: &[u8]) -> std::io::Result<()> {
     Ok(())
 }
 
-pub fn read_file_all(path: &Path) -> std::io::Result<String> {
+pub fn read_file_str(path: &Path) -> std::io::Result<String> {
     let mut file = fs::File::open(path)?;
     let mut text = String::new();
     file.read_to_string(&mut text)?;
     Ok(text)
 }
 
-pub fn read_file_all_as_bytes(path: &Path) -> std::io::Result<Vec<u8>> {
+pub fn read_file_bytes(path: &Path) -> std::io::Result<Vec<u8>> {
     let mut file = fs::File::open(path)?;
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer)?;
@@ -24,12 +24,12 @@ pub fn read_file_all_as_bytes(path: &Path) -> std::io::Result<Vec<u8>> {
 }
 
 pub fn read_every_line(path: &Path) -> std::io::Result<Vec<String>> {
-    let buffer = read_file_all_as_bytes(path)?;
+    let buffer = read_file_bytes(path)?;
     Ok(split_lines(buffer))
 }
 
 pub fn read_last_line(path: &Path) -> std::io::Result<String> {
-    let buffer = read_file_all_as_bytes(path)?;
+    let buffer = read_file_bytes(path)?;
     Ok(extract_last_line(buffer))
 }
 

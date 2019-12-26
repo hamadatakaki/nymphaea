@@ -1,23 +1,8 @@
-use crate::metadatas::objects::{Entry, create_blob, generate_tree, search_latest_tree};
+use crate::metadatas::objects::{Entry, yield_blob, yield_tree};
+use crate::metadatas::util::modelize_entry;
 
 use std::fs;
 use std::path::{Path, PathBuf};
-
-macro_rules! modelize_entry {
-    ($e: expr) => {
-        if $e.is_file() {
-            Entry::File
-        } else {
-            Entry::Dir
-        }
-    };
-}
-
-macro_rules! path_contains_str {
-    ($p: expr, $s: expr) => {
-        $p.to_str().unwrap().contains($s)
-    };
-}
 
 pub fn add() -> std::io::Result<()> {
     // start searching new objects
@@ -30,15 +15,16 @@ pub fn add() -> std::io::Result<()> {
 }
 
 fn rec_search(path: &Path) -> std::io::Result<String> {
-    let mut hashes: Vec<(Entry, String, PathBuf)> = Vec::new();
-    for e in fs::read_dir(path)? {
-        let p = e?.path();
-        if path_contains_str!(p, ".nymphaea") { continue; }
-        let hash = match modelize_entry!(p) {
-            Entry::File => create_blob(&p)?,
+    let mut hashes: Vec<(PathBuf, String)> = Vec::new();
+    // iterate to generate hash from entry.
+    for entry in fs::read_dir(path)? {
+        let p = entry?.path();
+        if p.ends_with(".nymphaea") { continue; }
+        let hash = match modelize_entry(p.as_path()) {
+            Entry::File => yield_blob(&p)?,
             Entry::Dir  => rec_search(&p)?
         };
-        hashes.push((modelize_entry!(p), hash, p));
+        hashes.push((p, hash));
     };
-    generate_tree(path, hashes)
+    yield_tree(path, hashes)
 }

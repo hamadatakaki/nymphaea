@@ -1,4 +1,7 @@
+use crate::metadatas::objects::Entry;
+
 use std::io::{Read, Write};
+use std::path::Path;
 
 use libflate::zlib::{Encoder, Decoder};
 use crypto::digest::Digest;
@@ -24,24 +27,10 @@ pub fn decode_by_zlib(source: &[u8]) -> std::result::Result<Vec<u8>, std::io::Er
     Ok(buffer)
 }
 
-pub fn mobilize_lines(lines: Vec<String>) -> String {
-    lines.join("\n")
-}
-
-#[cfg(test)]
-mod tests {
-    use super::mobilize_lines;
-
-    #[test]
-    fn test_mobilize_lines() {
-        let lines = vec! {
-            "hoge".to_string(),
-            "fuga".to_string(),
-            "giga".to_string()
-        };
-        let joint = mobilize_lines(lines);
-        assert_eq!(String::from("hoge\nfuga\ngiga"), joint);
-        println!("{}", joint);
+pub fn modelize_entry(path: &Path) -> Entry {
+    if path.is_file() {
+        Entry::File
+    } else {
+        Entry::Dir
     }
-
 }

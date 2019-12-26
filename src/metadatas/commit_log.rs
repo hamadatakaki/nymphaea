@@ -2,6 +2,7 @@ use crate::manage_file::*;
 
 use std::path::Path;
 
+#[allow(dead_code)]
 pub struct CommitLog {
     pub hash: String,
     message: String,
@@ -19,7 +20,6 @@ impl CommitLog {
 
     fn from_line(line: &str) -> Self {
         let mut splited: Vec<&str> = line.splitn(3, ' ').collect();
-
         let message = match splited.pop() {
             Some(m) => m,
             None => panic!("bad commit log!\n")

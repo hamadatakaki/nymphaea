@@ -18,12 +18,12 @@ pub fn init() -> std::io::Result<()> {
         println!("The repository has already exsisted.");
     } else {
         create_dir(".nymphaea")?;
+        create_dir(".nymphaea/commit_logs")?;
+        create_dir(".nymphaea/objects")?;
         create_file!(".nymphaea/current_branch", "master");
         create_file!(".nymphaea/commit_metadatas", "");
         create_file!(".nymphaea/object_hash_table", "");
-        create_dir(".nymphaea/commit_logs")?;
         create_file!(".nymphaea/commit_logs/master", "");
-        create_dir(".nymphaea/objects")?;
     }
     Ok(())
 }
