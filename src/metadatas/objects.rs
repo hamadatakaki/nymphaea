@@ -1,4 +1,4 @@
-use crate::manage_file::{create_file, read_file_bytes, read_every_line};
+use crate::manage_file::{create_encoded, read_file_bytes, read_every_line};
 use crate::metadatas::latest_commit_hash;
 use crate::metadatas::util::{decode_by_zlib, generate_hash, modelize_entry};
 
@@ -26,7 +26,6 @@ impl ObjectHashRecord {
 
     fn from_line(line: &str) -> Self {
         let mut splited: Vec<&str> = line.splitn(3, ' ').collect();
-
         let path = match splited.pop() {
             Some(p) => PathBuf::from(p),
             None => panic!("bad object hash table\n")
@@ -89,7 +88,7 @@ fn generate_blob(path: &Path) -> std::io::Result<String> {
     // write object
     let blob_path = format!(".nymphaea/objects/{}", hash);
     let blob_path = Path::new(&blob_path);
-    create_file(blob_path, &src)?;
+    create_encoded(blob_path, &src)?;
     println!("DEBUG in BLOB    : path=>{:?}, hash=>{}", path, hash);  // DEBUG: To check generated hash.
     // return hash
     Ok(hash)
@@ -122,21 +121,10 @@ pub fn yield_tree(path: &Path, hashes: Vec<(PathBuf, String)>) -> std::io::Resul
     let hash = generate_hash(text.as_bytes());
     let tree_path = format!(".nymphaea/objects/{}", hash);
     let tree_path = Path::new(&tree_path);
-    create_file(tree_path, text.as_bytes())?;
+    create_encoded(tree_path, text.as_bytes())?;
     println!("DEBUG in TREE    : path=>{:?}, hash=>{}", path, hash);  // DEBUG: To check generated hash.
     Ok(hash)
 }
-
-pub fn search_latest_tree(path: &Path) -> std::io::Result<Option<String>> {
-    let latest_hash = latest_commit_hash()?.unwrap();
-    let table = ObjectHashTable::generate()?;
-    match table.search_record(&latest_hash, path) {
-        Some(record) => Ok(Some(record.object_hash)),
-        None => Ok(None)
-    }
-}
-
-
 
 #[cfg(test)]
 mod tests {

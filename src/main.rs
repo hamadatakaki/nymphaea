@@ -3,8 +3,6 @@ use nymphaea::commands;
 
 use clap::{App, Arg, SubCommand};
 
-
-
 fn main() -> std::io::Result<()> {  // TODO: clap導入
     let add = SubCommand::with_name("add")
         .about("Staging file's changes");
@@ -33,12 +31,10 @@ fn main() -> std::io::Result<()> {  // TODO: clap導入
         );
 
     let matches = app.get_matches();
-    if let Some(_matches) = matches.subcommand_matches("init") {
+    if let Some(_) = matches.subcommand_matches("init") {
         commands::init::init()?;
-        println!("repository initialized!");
     }
     if let Some(_matches) = matches.subcommand_matches("add") {
-        println!("add .");
         commands::add::add()?;
     }
     if let Some(_matches) = matches.subcommand_matches("commit") {

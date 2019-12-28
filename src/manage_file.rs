@@ -2,11 +2,18 @@ use std::io::{Read, Write};
 use std::path::Path;
 use std::fs;
 
+use crate::metadatas::util::encode_by_zlib;
+
 pub fn create_file(path: &Path, body: &[u8]) -> std::io::Result<()> {
     let mut file = fs::File::create(path)?;
     let size = file.write(body)?;
     assert_eq!(body.len(), size);
     Ok(())
+}
+
+pub fn create_encoded(path: &Path, body: &[u8]) -> std::io::Result<()> {
+    let encoded = encode_by_zlib(body)?;
+    create_file(path, &encoded)
 }
 
 pub fn read_file_str(path: &Path) -> std::io::Result<String> {

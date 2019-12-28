@@ -3,7 +3,6 @@ pub mod objects;
 pub mod util;
 
 use crate::manage_file::read_file_str;
-use objects::{Table, ObjectHashTable};
 
 use std::path::Path;
 
