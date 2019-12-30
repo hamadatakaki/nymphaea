@@ -4,10 +4,9 @@ use crate::metadatas::util::modelize_entry;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-pub fn add() -> std::io::Result<()> {
+pub fn add(path: &Path) -> std::io::Result<()> {  // TODO: "."より下のpathが与えられた時によしなにする処理.
     // start searching new objects
-    let current_path = Path::new(".");
-    let hash = rec_search(current_path)?;
+    let hash = rec_search(path)?;
     // renewal index
     let index_path = Path::new(".nymphaea/index");
     fs::write(index_path, &hash)?;
