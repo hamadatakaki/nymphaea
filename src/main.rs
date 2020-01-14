@@ -7,8 +7,8 @@ use std::path::Path;
 
 fn main() -> std::io::Result<()> {  // TODO: clap導入
     let add = SubCommand::with_name("add")
-        .about("Staging file's changes")
-        .arg(Arg::from_usage("<path> 'the path where nymphaea will add.'"));
+        .about("変更をステージングする.")
+        .arg(Arg::from_usage("<path> 'ステージングしたいpathを指定する.'"));
     
     let cat_file = SubCommand::with_name("cat_file")
         .about("cat file");
