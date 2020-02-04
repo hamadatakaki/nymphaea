@@ -12,5 +12,8 @@ test: sandbox target/debug/nymphaea
 	../target/debug/nymphaea commit "hoge.py"
 
 show: sandbox/.nymphaea
-	cd sandbox
 	cat sandbox/.nymphaea/index
+	./testool decompress
+
+clean:
+	rm -rf sandbox

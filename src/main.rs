@@ -8,7 +8,7 @@ use std::path::Path;
 fn main() -> std::io::Result<()> {  // TODO: clap導入
     let add = SubCommand::with_name("add")
         .about("変更をステージングする.")
-        .arg(Arg::from_usage("<path> 'ステージングしたいpathを指定する.'"));
+        /*.arg(Arg::from_usage("<path> 'ステージングしたいpathを指定する.'"))*/;
     
     let cat_file = SubCommand::with_name("cat_file")
         .about("cat file");
@@ -37,15 +37,19 @@ fn main() -> std::io::Result<()> {  // TODO: clap導入
     if let Some(_) = matches.subcommand_matches("init") {
         commands::init::init()?;
     }
-    if let Some(matches) = matches.subcommand_matches("add") {
-        if let Some(path) = matches.value_of("path") {
-            // TODO: 与えられたpathを正規化する処理.
-            let path = Path::new(path);
-            if !path.exists() { panic!("this path '{:?}' doesn't exist.", path); }
-            println!("DEBUG in main    : selected_path=>{:?}", path);
-            commands::add::add(path)?;
-        }
+    if let Some(_matches) = matches.subcommand_matches("add") {
+        let path = Path::new(".");
+        commands::add::add(path)?;
     }
+    // if let Some(matches) = matches.subcommand_matches("add") {
+    //     if let Some(path) = matches.value_of("path") {
+    //         // TODO: 与えられたpathを正規化する処理.
+    //         let path = Path::new(path);
+    //         if !path.exists() { panic!("this path '{:?}' doesn't exist.", path); }
+    //         println!("DEBUG in main    : selected_path=>{:?}", path);
+    //         commands::add::add(path)?;
+    //     }
+    // }
     if let Some(_matches) = matches.subcommand_matches("commit") {
         println!("commit")
     }

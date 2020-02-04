@@ -4,7 +4,7 @@ use crate::metadatas::util::modelize_entry;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-pub fn add(path: &Path) -> std::io::Result<()> {  // TODO: "."より下のpathが与えられた時によしなにする処理.
+pub fn add(path: &Path) -> std::io::Result<()> {
     // start searching new objects
     let hash = rec_search(path)?;
     // renewal index
@@ -18,7 +18,7 @@ fn rec_search(path: &Path) -> std::io::Result<String> {
     // iterate to generate hash from entry.
     for entry in fs::read_dir(path)? {
         let p = entry?.path();
-        if p.ends_with(".nymphaea") { continue; }
+        if jump_path_condition(&p) { continue; }
         let hash = match modelize_entry(p.as_path()) {
             Entry::File => yield_blob(&p)?,
             Entry::Dir  => rec_search(&p)?
@@ -26,4 +26,9 @@ fn rec_search(path: &Path) -> std::io::Result<String> {
         hashes.push((p, hash));
     };
     yield_tree(path, hashes)
+}
+
+fn jump_path_condition(path: &Path) -> bool {
+    let judged = path.ends_with(".nymphaea");
+    judged
 }
