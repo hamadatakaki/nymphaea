@@ -1,5 +1,5 @@
 use crate::metadatas::objects::get_object_data;
-use crate::metadatas::objects::create_blob;
+use crate::metadatas::objects::yield_blob;
 
 use std::path::Path;
 
@@ -12,7 +12,7 @@ pub fn cat_file(hash: &str) -> std::io::Result<()> {
 }
 
 pub fn create_object(path: &Path) -> std::io::Result<()> {
-    let hash = create_blob(path)?;
+    let hash = yield_blob(path)?;
     println!("create_object: {}", hash);
     Ok(())
 }
